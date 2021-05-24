@@ -7,7 +7,8 @@
 
 ### 기능
 prototype function
-- [Main page] - HTML
+- [System] - Shell Script
+- [Main page] - HTML, Flask
 - [Crawler] - Python : Beautifulsoup4 
 - [Search] - Python : Elasticsearch
 
