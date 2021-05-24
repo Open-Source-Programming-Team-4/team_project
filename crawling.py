@@ -5,6 +5,10 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+
+
+#---------------------------------------------------------- regex function ----------------------------------------------------------
+
 # 특정 문자열 제거 함수 
 # input : wordList( 제거할 문자열로 이루어진 리스트 )
 #         string( 특정 문자열을 제거할 문자열 )
@@ -13,11 +17,15 @@ from bs4 import BeautifulSoup
 def RemoveWords(wordlist , string) :
     return re.sub('|'.join(wordlist) , '' , string)
 
+
+
 # field에서 각 필드를 나누고 앞의 "분야 : " 문자를 제거하는 함수
 # 우선 field에 맞춤 설계 - 이후 수정가능성 있음
 def SplitFieldString(s ,wordlist=["분야 : "]) :
     result = re.sub(r'[/,]' ,' ', RemoveWords(wordlist , s))
     return result
+
+
 
 # wevity의 사이트에서 공모전 목록 페이지가 얼마나 있는지 확인하는 함수 
 # input : page - 현재 페이지 넘버 
@@ -51,13 +59,15 @@ def FindMaxPage_wevity(page ,URL ) :
     return  [ maximum , isNext ]
 
 
+#---------------------------------------------------------- crawling fuction ----------------------------------------------------------
+
 
 def CrawlingByField_wevity(field=0 , mode="ing") :
 
     """ ---------- wevity 크롤링 함수 ---------- 
      분야와 접수정보를 parameter로 받아 해당하는 페이지의 정보를 return
     
-     - filed : 분야 설정 (default : "" - 모든분야 )
+     - filed : 분야 설정 (default : 0 - 모든분야 )
 
         기획/아이디어 - 1 , 광고/마케팅 - 2 , 논문/리포트 - 3 
         영상/UCC/사진 - 10 , 디자인/케릭터/웹툰 - 19 , 웹/모바일/플래시 - 20
@@ -124,6 +134,10 @@ def CrawlingByField_wevity(field=0 , mode="ing") :
 
     return result
     
+
+
+#---------------------------------------------------------- test ----------------------------------------------------------
+
 
 
 if __name__ == "__main__" :
