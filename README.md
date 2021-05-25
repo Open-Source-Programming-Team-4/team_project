@@ -2,7 +2,7 @@
 
 
 ### 구성도
-여기에 추가
+![OSP구성도](https://user-images.githubusercontent.com/79684170/119575711-6b029a00-bdf2-11eb-8212-6e1f12d5cf56.png)
 
 
 ### 기능
