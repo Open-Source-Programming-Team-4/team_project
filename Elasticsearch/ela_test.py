@@ -14,7 +14,7 @@ if __name__ == '__main__':
   client = Elasticsearch(
     hosts = [{host : es_host, port : es_port}]
   )
-  index_name = 'korean_thesis'
+  index_name = 'idx_name'
   print(client.search(
     index = index_name,
     body = {
