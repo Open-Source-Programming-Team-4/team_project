@@ -87,7 +87,7 @@ def CrawlingByField_wevity(field=0 , mode="ing") :
         대외활동/서포터즈 - 27 , 봉사활동 - 89 , 취업/창업 - 88
         해외 - 28 , 기타 - 29
 
-     - mdoe :  접수 정보 (default : "ing" - 접수중 )
+     - mode :  접수 정보 (default : "ing" - 접수중 )
 
         스페셜 - "spec" , 신규 - "new" , 마감임박 - "soon"
         접수중 - "ing", 접수예정 - "future" , 마감 - "end"
