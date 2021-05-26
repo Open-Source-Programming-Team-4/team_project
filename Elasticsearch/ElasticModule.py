@@ -15,7 +15,6 @@ es = Elasticsearch([{'host':es_host, 'port':es_port}], timeout=30)
 #첫번째 인자로 받은 딕셔너리 데이터(data)를 엘라스틱 서치에 저장하는 함수
 #2인자 엘라스틱 서치의 인덱스, 3인자 도큐먼트 타입, 4인자 ID
 def dataInsert(data, idx, docType, idNum): 
-
 	res = es.index(index=idx, doc_type=docType,id=idNum, body=data)
 	print(res)
 
