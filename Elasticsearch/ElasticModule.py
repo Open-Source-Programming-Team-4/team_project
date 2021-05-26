@@ -4,7 +4,7 @@
 #모듈 사용시 my_pkg 폴더안에 __init__.py와 함께 넣어서 사용
 #메인 코드에서 import my_pkg.ElasticModule 으로 임포트 해주고 
 #my_pkg.ElasticModule.delData("test","words",1) 와같이 함수를 사용할 수 있습니다
-#검색기능 현재 미구현상태 05-27
+#세부적인 검색기능 현재 미구현상태 
 
 from elasticsearch import Elasticsearch
 
