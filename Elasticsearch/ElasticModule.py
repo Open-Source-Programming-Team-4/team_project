@@ -25,8 +25,8 @@ def searchData(idx,docType):
         res = es.search(index = idx, doc_type = docType)
         print(res)
 
-#1인자 인덱스, 2인자 도큐먼트 타입 / 해당 데이터를 추출해서 딕셔너리 타입으로 반환해주는 함수
-#딕셔너리의 키값은 장영우분이 크롤링 코드에서 만드신 딕셔너리의 키값을 사용했습니다.(title,field,host)
+#1인자 인덱스, 2인자 도큐먼트 타입 / 해당 데이터를 추출해서 딕셔너리 타입으로 반환해주는 함수 
+#딕셔너리의 키값은 장영우분이 크롤링 코드에서 만드신 딕셔너리의 키값을 사용했습니다.(title,field,host) 아직까진 해당 형태의 딕셔너리만이 추출가능합니다.
 def extractData(idx,docType):
 	res = {}
 	result = []
