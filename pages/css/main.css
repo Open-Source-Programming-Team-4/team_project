@@ -24,3 +24,25 @@
 	color: red;
 	background-color: #4d4d4d;
 }
+
+#contents {
+	height: 20px;
+	width: 850px;
+}
+#contents ul li {
+	list-style: none;
+	color: white;
+	background-color: #2d2d2d;
+	float: left;
+	line-height: 20px;
+	vertical-align: middle;
+	text-align: center;
+}
+#contents .elem-top{
+	text-decoration: none;
+	color: black;
+	display: block;
+	width: 150px;
+	font-size: 11px;
+	font-family: "맑은 고딕", Dotum, Arial;
+}
