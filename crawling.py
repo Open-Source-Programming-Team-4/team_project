@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #-*- coding: utf-8 -*-
 
 import re
@@ -25,12 +25,12 @@ def SplitFieldString(s , wordlist=[ "분야" ] , dividchar=[",",":","/"]) :
 
      return : 분야(문자열)들이 담긴 리스트
     '''
-
+    
     if len(dividchar) > 1 :
         for i in dividchar[1:] :
             s = s.replace( i , dividchar[0] )
-
-    return list(filter(lambda x : x not in wordlist , list(map( str.strip ,s.split(dividchar[0])))))
+    
+    return list(filter(lambda x : x not in wordlist , list(map( str.strip , s.split(dividchar[0])))))
 
 def FindMaxPage_wevity(page ,URL ) :
     '''
@@ -73,7 +73,7 @@ def FindMaxPage_wevity(page ,URL ) :
 #---------------------------------------------------------- crawling fuction ----------------------------------------------------------
 
 
-def CrawlingByField_wevity(field=0 , mode="ing") :
+def CrawlingByField_wevity(whatfield=0 , mode="ing") :
 
     """ ---------- wevity 크롤링 함수 ---------- 
      분야와 접수정보를 parameter로 받아 해당하는 페이지의 정보를 return
@@ -95,14 +95,13 @@ def CrawlingByField_wevity(field=0 , mode="ing") :
      출력값 - 이름 , 분야 , 주최자 정보를 list로 가지는 dict
 
     """
-
     mode = "&mode=" + mode
-    if field == 0 :
-        field = ""
+    if whatfield == 0 :
+        whatfield = ""
     else :
-        field = "&cidx="+ str(field)
+        whatfield = "&cidx="+ str(whatfield)
 
-    URL = "https://www.wevity.com/?c=find&s=1"+ mode + "&gub=1" + field + "&gp=1"
+    URL = "https://www.wevity.com/?c=find&s=1"+ mode + "&gub=1" + whatfield + "&gp=1"
     response = requests.get(URL)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -126,7 +125,7 @@ def CrawlingByField_wevity(field=0 , mode="ing") :
 	    whole_source = whole_source + response.text
 
     # 출력값 - 이름 , 분야 , 주최자 정보를 list로 가지는 dict
-    result = { "title" : [] , "field" : [] , "host" : []}
+    result = { "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "dday-ing" : [] ,"url" : [] }
 
     #통합된 html에서 공모전 이름 , 분야 , 주최자 정보 추출 
     soup = BeautifulSoup(whole_source, 'html.parser')
@@ -155,9 +154,19 @@ def CrawlingByField_wevity(field=0 , mode="ing") :
         result["field"].append(SplitFieldString(field.text))
 
     # host ( string ) - 공모전 주최자를 저장하는 부분
-    find_host = soup.select("li > div.organ")
+    find_host = soup.select("li:not(.top) > div.organ")
     for host in find_host :
         result["host"].append(host.text)
+
+    find_Dday = soup.select("li:not(.top) > div.day")
+    for day in find_Dday :
+        d_soup = BeautifulSoup(str(day), 'html.parser')
+        result["dday-ing"].append(d_soup.find('span').text.replace('\n',''))
+        for i in d_soup.select('span') : i.decompose()
+        result["Dday"].append(d_soup.text)
+
+    
+    
 
     #############################################################################################
 
@@ -172,13 +181,17 @@ def CrawlingByField_wevity(field=0 , mode="ing") :
 
 if __name__ == "__main__" :
     # 여기서 테스트 해보세요 
-    data = CrawlingByField_wevity(field=2, mode="end")
-    #data = CrawlingByField_wevity(field=28, mode="soon")
-    #data = CrawlingByField_wevity(field=21)
+    data = CrawlingByField_wevity(whatfield=2, mode="end")
+    #data = CrawlingByField_wevity(whatfield=28, mode="soon")
+    #data = CrawlingByField_wevity(whatfield=21)
     #data = CrawlingByField_wevity()
-    
     for i in range(len(data["title"])) :
-        print(str(data["title"][i]) + " / " + str(data["field"][i]) + " / " + data["host"][i] )
+        print(data["title"][i])
+        print(data["field"][i])
+        print(data["host"][i])
+        print("hehe"+data["Dday"][i])
+        print(data["dday-ing"][i])
+        print("----------------------------------------")
     print(str(len(data["title"]))+"개의 공모전 정보를 탐색했습니다.")
 
 
