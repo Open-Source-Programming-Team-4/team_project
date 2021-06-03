@@ -140,6 +140,12 @@ def CrawlingByField_wevity(whatfield=0 , mode="ing") :
     # title ( string ) - 공모전 이름을 저장하는 부분
     find_title = soup.select("li > div.tit > a")
     for title in find_title :
+        # get_title -  공모전의 url을 찾기 위해 세부링크로 이동
+        get_title = requests.get("https://www.wevity.com/" + title["href"])
+        url_soup = BeautifulSoup(get_title.text, 'html.parser')
+        for find_url in url_soup.select("div.contest-detail > div.cd-area > div.info > ul.cd-info-list > li:nth-child(8) > a") :
+            result["url"].append(find_url["href"])
+
         # title은 a tag 안에 span tag가 자식태그로 있어서 자식 태그 span을 제외하고 a의 내용만 받아야 함
         t_soup = BeautifulSoup(str(title), 'html.parser')           # a tag => t_soup
         if t_soup.select('span') != [] :                            # span 태그가 자식으로 있다면
@@ -158,12 +164,13 @@ def CrawlingByField_wevity(whatfield=0 , mode="ing") :
     for host in find_host :
         result["host"].append(host.text)
 
+    #D-day 와 진행상황을 얻기 위한 코드
     find_Dday = soup.select("li:not(.top) > div.day")
     for day in find_Dday :
         d_soup = BeautifulSoup(str(day), 'html.parser')
         result["dday-ing"].append(d_soup.find('span').text.replace('\n',''))
         for i in d_soup.select('span') : i.decompose()
-        result["Dday"].append(d_soup.text)
+        result["Dday"].append(' '.join(d_soup.text.split()))
 
     
     
@@ -185,15 +192,17 @@ if __name__ == "__main__" :
     #data = CrawlingByField_wevity(whatfield=28, mode="soon")
     #data = CrawlingByField_wevity(whatfield=21)
     #data = CrawlingByField_wevity()
+    
     for i in range(len(data["title"])) :
         print(data["title"][i])
         print(data["field"][i])
         print(data["host"][i])
-        print("hehe"+data["Dday"][i])
+        print(data["Dday"][i])
         print(data["dday-ing"][i])
+        print(data["url"][i])
         print("----------------------------------------")
     print(str(len(data["title"]))+"개의 공모전 정보를 탐색했습니다.")
-
+    
 
 
     
