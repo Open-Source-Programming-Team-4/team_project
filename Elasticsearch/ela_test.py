@@ -1,5 +1,5 @@
 # Elasticsearch 기본 폼
-from elasticsearhch import Elasticsearch
+from elasticsearch import Elasticsearch
 
 # host, port 설정
 es_host = '127.0.0.1'
