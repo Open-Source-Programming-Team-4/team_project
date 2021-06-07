@@ -29,10 +29,10 @@ data_set = {
 '''
 
 # wevity 모든 분야 / 접수 중 데이터 전체 가져오기
-wevity_data_ing = crawling.CrawlingByField_wevity(0, "ing")
+wevity_data_ing = crawling.CrawlingByField_wevity(2, "end")
 
 # 데이터 저장
-def data_store():
+def data_store(idx):
 	''' 접수 중 데이터 저장 '''
 	for i in range(len(wevity_data_ing["title"])):
 		input_data = {
@@ -43,7 +43,7 @@ def data_store():
 			"dday-ing" : wevity_data_ing["dday-ing"][i],
 			"url" : wevity_data_ing["url"][i]
 		}
-		res = es.index(index="ing", doc_type="_doc", id=i+1, body=input_data)
+		res = es.index(index=idx, doc_type="_doc", id=i+1, body=input_data)
 		print(res)
 
 # 저장 된 전체 데이터 검색
@@ -63,25 +63,23 @@ def data_search_all():
 title로 검색을 할 때, input 값과 일치하는 값을 결과로 리턴
 현재 input 값과 일치하는 값 뿐만 아니라, input 값의 단어 중 하나만 포함해도 검색 결과가 리턴되는 오류가 있음
 '''
-def data_search(input_str):
+def data_search(idx, input_str):
 	query = {
 		"query":{
-			"bool":{
-				"must":[{
-					"match":{
-						"title":input_str
-					}
-				}]
+			"multi_match":{
+				"query":input_str
 			}
 		}
 	}
-	res = es.search(index="ing", body=query, size=10000)
+	res = es.search(index=idx, body=query, size=10000)
 	print("검색 결과")
 	for hit in res["hits"]["hits"]:
 		print(hit["_source"])
 
 ''' 데이터 저장 & 검색 테스트 '''
 if __name__ == "__main__" :
-	data_store()
-	data_search_all()
-#	data_search("잘풀리는집 미용티슈 패키지 디자인 공모전")
+	idx = "test_idx"
+
+	data_store(idx)
+#	data_search_all()
+	data_search(idx, "2020 부산국제광고제 청소년 크리에이티브 공모전")
