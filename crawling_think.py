@@ -2,10 +2,8 @@
 #-*- coding: utf-8 -*-
 
 
-###해야할것  ->  크롤링한 url을 사이트 뒤에 붙여야함, 제일 마지막 페이지 뽑아서 그 페이지까지 크롤링하는것.
-##### 분야별에서 전체로 크롤링 10개씩 나옴.
-###### 최대페이지를 찾아서 페이지 하나씩 넘겨가면서 10개씩 크롤링해서 저장하면 될듯
- 
+#최대페이지, URL 해결. 1~2669 까지 매번 돌릴 것인지 결정하기.
+# 시간이 많이 걸리니까 다른곳에다가 저장해놓고 새로운 것들만 크롤링하는 것도 방법.
 
 #result(dict)의 각 0번들 
 #2021 그린스마트 미래학교「가상설계 및 콘텐츠」공모전
@@ -13,7 +11,7 @@
 #교육부, 전국 17개 시ㆍ도교육청
 #D-2
 #접수예정
-#/Contest/ContestDetail.html?id=31018
+#https://www.thinkcontest.com/Contest/ContestDetail.html?id=31018
 
 
 import re
@@ -42,14 +40,14 @@ from flask import Flask, render_template
 #	print(type(url))
 result = { "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "dday-ing" : [] ,"url" : [] }
 
+#마지막 페이지 리턴.
 def FindMaxPage_think(url):
   res=requests.get(url)
   soup=BeautifulSoup(res.content,"html.parser")
   maxpage = soup.select("#main > div > div.body.contest-cate > div > div.paging-wrap > div > a")[8]
-  print(type(maxpage))
-  print(maxpage)     
-  # 이렇게하면은 <a class="next" href="CateField.html?page=2653"><i aria-hidden="true" class="fa fa-caret-right"></i><i aria-hidden="true" class="fa fa-caret-right"></i></a>
-  #이렇게 나오고 여기서 2653을 추출하면 그게 마지막 페이지 아마?? 2653 을 리턴해줌. 
+  max=maxpage["href"].split('=')
+
+  return max[1]
 
 
 # 공모전 이름 
@@ -119,10 +117,9 @@ def url_think(url):
   res=requests.get(url)
   soup=BeautifulSoup(res.content,"html.parser")
   URL = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td.txt-left > div.contest-title.special > a")
+  aa='https://www.thinkcontest.com'
   for list in URL:
-    result["url"].append(list["href"])
-    #print(list["href"])
-  
+    result["url"].append(aa+list["href"])  
 
 
 def Crawling_think(url):
@@ -138,7 +135,13 @@ def Crawling_think(url):
 if __name__ == '__main__':
   url = u'https://www.thinkcontest.com/Contest/CateField.html'
   
-  #FindMaxPage_think(url)
+  maximum = FindMaxPage_think(url)
+  print(maximum)
+  num='2'
+ 
+  url='https://www.thinkcontest.com/Contest/CateField.html'+'?page='+num
+  print(url)
+
   Crawling_think(url)
   for i in range(len(result["title"])):
     print(result["title"][i])
