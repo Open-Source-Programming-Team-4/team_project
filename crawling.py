@@ -32,6 +32,14 @@ def SplitFieldString(s , wordlist=[ "분야" ] , dividchar=[",",":","/"]) :
     
     return list(filter(lambda x : x not in wordlist , list(map( str.strip , s.split(dividchar[0])))))
 
+
+
+
+
+
+
+
+
 def FindMaxPage_wevity(page ,URL ) :
     '''
      wevity의 사이트에서 공모전 목록 페이지가 얼마나 있는지 확인하는 함수
@@ -71,6 +79,11 @@ def FindMaxPage_wevity(page ,URL ) :
 
 
 #---------------------------------------------------------- crawling fuction ----------------------------------------------------------
+
+
+
+
+
 
 
 def CrawlingByField_wevity(whatfield=0 , mode="ing") :
@@ -140,11 +153,7 @@ def CrawlingByField_wevity(whatfield=0 , mode="ing") :
     # title ( string ) - 공모전 이름을 저장하는 부분
     find_title = soup.select("li > div.tit > a")
     for title in find_title :
-        # get_title -  공모전의 url을 찾기 위해 세부링크로 이동
-        get_title = requests.get("https://www.wevity.com/" + title["href"])
-        url_soup = BeautifulSoup(get_title.text, 'html.parser')
-        for find_url in url_soup.select("div.contest-detail > div.cd-area > div.info > ul.cd-info-list > li:nth-child(8) > a") :
-            result["url"].append(find_url["href"])
+        result["url"].append("https://www.wevity.com/" + title["href"])
 
         # title은 a tag 안에 span tag가 자식태그로 있어서 자식 태그 span을 제외하고 a의 내용만 받아야 함
         t_soup = BeautifulSoup(str(title), 'html.parser')           # a tag => t_soup
