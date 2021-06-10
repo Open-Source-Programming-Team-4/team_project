@@ -19,29 +19,14 @@ import requests
 from bs4 import BeautifulSoup
 from flask import Flask, render_template
 
-#이부분 의미없는듯 그냥 전체 다 들고올거면 https://www.thinkcontest.com/Contest/ContestDetail.html?id=31076
-#이런식으로 뒤에 /ContestDetail.html?id=숫자  붙이면 됨.
+# https://www.thinkcontest.com/Contest/ContestDetail.html?id=31076
+#id뒤의 숫자가 각 공모전의 번
 
-#  - 분야별 -
-#  전체는 ~CateField.html 임
-#  페이지는 +?page=(숫자) 분야는 &c=(숫자)
-#  <예시> 기획/아이디어의 3번째 페이지는 https://www.thinkcontest.com/Contest/CateField.html?page=3&c=2
 
-#	논문/리포트 - 1, 기획/아이디어 - 2, 네이밍/슬로건 - 3, 디자인 - 4,
-#	광고/마케팅 - 5, 사진 - 6, UCC/영상 - 7, 예체능 - 8, 문학/수기 - 9,
-#	캐릭터/만화 - 10, 과학/공학 - 11, 게임/소프트웨어 - 12, 건축/건설 - 13,
-#	대외활동 - 14, 취업/창업 - 15, 경품/이벤트 - 16, 전시/페스티발 - 17, 
-#	장학(금)재단 - 18, 봉사활동 - 19, 해외 - 20
-
-#  - 접수 정보 (default : 생략은 전체)
-#	스폐셜 공모 - sp, 마감임박 - hurry, 접수중 - ing,
-#	접수예정 - soon, 마감 - end 
- 	
-#	print(type(url))
 result = { "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "dday-ing" : [] ,"url" : [] }
 
 #마지막 페이지 리턴.
-def FindMaxPage_think(url):
+def FindMaxPage_think(url):호
   res=requests.get(url)
   soup=BeautifulSoup(res.content,"html.parser")
   maxpage = soup.select("#main > div > div.body.contest-cate > div > div.paging-wrap > div > a")[8]
@@ -49,104 +34,54 @@ def FindMaxPage_think(url):
 
   return max[1]
 
-
-# 공모전 이름 
-def title_think(url):
-  # html에  + ?page=1 ~ ?page=2653 까지 원래 url에다가 붙여서 돌리면 해당 페이지의 제목 나옴.
-  res=requests.get(url)
-  soup=BeautifulSoup(res.content,"html.parser")
-  title = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td.txt-left > div.contest-title > a")
-  for sp_list in title:
-    result["title"].append(sp_list.text)
-   # print(sp_list.text)
-
-#분야 
-def field_think(url):
-  res=requests.get(url)
-  soup=BeautifulSoup(res.content,"html.parser")
-  #field = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td.txt-left > div.contest-cate > span")
-  field = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td.txt-left > div.contest-cate")
-  #main > div > div.body.contest-cate > div > table > tbody > tr:nth-child(1) > td.txt-left > div.contest-cate > span:nth-child(6)
-  #main > div > div.body.contest-cate > div > table > tbody > tr:nth-child(1) > td.txt-left > div.contest-cate
-  #print(type(field))
-  #print(field)
-  for list in field:
-    list_text=list.text
-   # print(type(list_text))
-    split_list=list_text.split('\n')
-    result["field"].append(split_list)
-    #a=split_list.split('\n')
-    #print(a)
-   # print(type(split_list))
-   # print(list.text)
-
- #print()
-
-#주최사
-def host_think(url):
-  res=requests.get(url)
-  soup=BeautifulSoup(res.content,"html.parser")
-  host = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td:nth-of-type(2)")
-  for list in host:
-    #print(list.text)
-    result["host"].append(list.text)
-    
-  ## nth-of-type 써야함..
-
-#디데이
-def Dday_think(url):
-  res=requests.get(url)
-  soup=BeautifulSoup(res.content,"html.parser")
-  dday = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td:nth-of-type(3) > p")
-  for list in dday:
-    result["Dday"].append(list.text)
-    #print(list.text)
-
-#진행사항
-def dday_ing_think(url):
-  res=requests.get(url)
-  soup=BeautifulSoup(res.content,"html.parser")
-  mode = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td:nth-of-type(3) > span > span")
-  for list in mode:
-    result["dday-ing"].append(list.text)
-    #print(list.text)
-
-
-
-def url_think(url):
-  res=requests.get(url)
-  soup=BeautifulSoup(res.content,"html.parser")
-  URL = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td.txt-left > div.contest-title.special > a")
-  aa='https://www.thinkcontest.com'
-  for list in URL:
-    result["url"].append(aa+list["href"])  
-
-
 def Crawling_think(url):
-  title_think(url)
-  field_think(url)
-  host_think(url)
-  Dday_think(url)
-  dday_ing_think(url)
-  url_think(url)
-
-
+  for num in range(1,400):
+	num=str(num)
+      	url='https://www.thinkcontest.com/Contest/CateField.html'+'?page=' + num
+      	res=requests.get(url)
+      	soup=BeautifulSoup(res.content,"html.parser")
+      	for n in range(10):
+        	result_think["site"].append("씽굿") 
+      	title = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td.txt-left > div.contest-title > a")
+      	for sp_list in title:
+        	result_think["title"].append(sp_list.text)
+      	field = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td.txt-left > div.contest-cate")
+      	for b in field:
+        	list_text=b.text
+        	split_list=list_text.split()
+        	result_think["field"].append(split_list)
+      	host = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td:nth-of-type(2)")
+      	for c in host:
+        	result_think["host"].append(c.text)
+      	dday = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td:nth-of-type(3) > p")
+      	for d in dday:
+        	result_think["Dday"].append(d.text)
+      	mode = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td:nth-of-type(3) > span > span")
+      	for e in mode:
+        	result_think["dday-ing"].append(e.text)
+      	URL_list = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td.txt-left > div.contest-title > a")
+      	aa='https://www.thinkcontest.com'
+      	for f in URL_list:
+        	result_think["url"].append(aa+f["href"])
+  
 
 if __name__ == '__main__':
-  url = u'https://www.thinkcontest.com/Contest/CateField.html'
-  
-  maximum = FindMaxPage_think(url)
-  print(maximum)
-  num='2'
+	url = u'https://www.thinkcontest.com/Contest/CateField.html'
  
-  url='https://www.thinkcontest.com/Contest/CateField.html'+'?page='+num
-  print(url)
+  #maximum = int(FindMaxPage_think(url))
+	Crawling_think(url)
+  
 
-  Crawling_think(url)
-  for i in range(len(result["title"])):
-    print(result["title"][i])
-    print(result["field"][i])
-    print(result["host"][i])
-    print(result["Dday"][i])
-    print(result["dday-ing"][i])
-    print(result["url"][i])
+	print(len(result_think["site"]))
+
+  
+	for i in range(len(result_think["title"])):
+	print(result_think["site"][i])
+    	print(result_think["title"][i])
+    	print(result_think["field"][i])
+    	print(result_think["host"][i])
+    	print(result_think["Dday"][i])
+    	print(result_think["dday-ing"][i])
+    	print(result_think["url"][i])
+
+  	print(len(result_think["Dday"]))
