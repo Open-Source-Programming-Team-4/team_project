@@ -194,7 +194,7 @@ if __name__ == "__main__" :
     #data = CrawlingByField_wevity(whatfield=2, mode="end")
     #data = CrawlingByField_wevity(whatfield=28, mode="soon")
     #data = CrawlingByField_wevity(whatfield=21)
-    data = CrawlingByField_wevity(10)
+    data = CrawlingByField_wevity(2 , whatfield=0 , mode="ing")
     
     for i in range(len(data["title"])) :
         print(data["site"][i])
