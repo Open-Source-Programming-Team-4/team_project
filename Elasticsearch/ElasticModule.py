@@ -15,7 +15,7 @@ my_pkg.ElasticModule.delData("test","words",1) 와같이 함수를 사용할 수
 1. 크롤링을 해서 data(딕셔너리)를 얻는다. 
 2. data를 dataInsert함수를 사용해서 엘라스틱 서치에 삽입한다.
 3. 검색함수를 사용해서 결과값을 얻는다(1.의 data와 똑같은 형태로 반환되나 
-코사인 유사도 분석의 경우는 결과값 확인을위해 cosSimScore라는 키값이 추가된 형태로 반환된다)
+코사인 유사도 분석의 경우는 코사인유사도 점수 확인을위해 cosSimScore라는 키값이 추가된 형태로 반환된다)
 
 반환되는 데이터 형태 
 data = { "site" : [], "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "dday-ing" : [] ,"url" : []}
