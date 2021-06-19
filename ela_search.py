@@ -2,6 +2,7 @@
 
 from elasticsearch import Elasticsearch
 import crawling
+import crawling_de
 
 '''
 *** elastic search module ***
@@ -19,17 +20,21 @@ es = Elasticsearch(hosts = [{"host" : es_host, "port" : es_port}])
 
 '''
 data_set = {
-	"title" : [],
-	"field" : [],
-	"host" : [],
-	"Dday" : [],
-	"dday-ing" : [],
-	"url" : []
+	"site" : [],		( 사이트 )
+	"title" : [],		( 제목 )
+	"field" : [],		( 분야 )
+	"host" : [],		( 주최사 )
+	"Dday" : [],		( 남은 기간 )
+	"dday-ing" : [],	( 진행상황 )
+	"url" : []		( 링크 )
 }
 '''
 
 # wevity 모든 분야 / 접수 중 데이터 전체 가져오기
 wevity_data_ing = crawling.CrawlingByField_wevity(2, "end")
+
+# 대티즌 크롤링 데이터 가져오기
+detizen_data = crawling_de.crawling_detizen(10)
 
 # 데이터 저장
 def data_store(idx):
