@@ -24,13 +24,13 @@ def crawling_detizen ( pageNum ) :
     
     for item in items :
         result["site"].append("detizen")
-        result["title"].append(item.select_one("div.main-info > h4 > a:nth-child(1)").text)
-        result["host"].append(split_txt(item.select_one("p:nth-child(1) > span").text))   
-        item.select_one("p:nth-child(1) > span").decompose()
+        result["title"].append(item.select_one("div.main-info > h4 > a:nth-of-type(1)").text)
+        result["host"].append(split_txt(item.select_one("p:nth-of-type(1) > span").text))   
+        item.select_one("p:nth-of-type(1) > span").decompose()
         result["Dday"].append(item.select_one("div.main-info > p > span").text)
         result["dday-ing"].append("-")
-        result["field"].append(split_txt(item.select_one("p:nth-child(1)").text))
-        result["url"].append(URL[:-4] + item.select_one("div.main-info > h4 > a:nth-child(1)")["href"])
+        result["field"].append(split_txt(item.select_one("p:nth-of-type(1)").text))
+        result["url"].append(URL[:-4] + item.select_one("div.main-info > h4 > a:nth-of-type(1)")["href"])
         
     return result
 
