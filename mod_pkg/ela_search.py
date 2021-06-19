@@ -4,6 +4,7 @@ from elasticsearch import Elasticsearch
 import pprint
 import crawling
 import crawling_de
+import crawling_think 
 import numpy as np
 from numpy.linalg import norm
 from numpy import dot
@@ -41,6 +42,23 @@ data_set = {
 
 # 대티즌 크롤링 데이터 가져오기
 detizen_data = crawling_de.crawling_detizen(10)
+
+# 씽굿 크롤링 데이터 가져오기
+think_data = crawling_think.Crawling_think()
+
+def data_store2(idx):
+	for i in range(len(think_data['site'])):
+		input_data = {
+			'site': think_data['site'][i],
+			'title': think_data['title'][i],
+			'field': think_data['field'][i],
+			'host': think_data['host'][i],
+			'Dday': think_data['Dday'][i],
+			'dday-ing': think_data['dday-ing'][i],
+			'url': think_data['url'][i]
+		}
+		res = es.index(index=idx, doc_type="_doc", id=i+1, body=input_data)
+#		print(res)
 
 # 데이터 저장
 def data_store(idx):
@@ -191,12 +209,15 @@ def data_search_cs(case, idx, input_str):
 ''' 데이터 저장 & 검색 테스트 '''
 if __name__ == "__main__" :
 	# index 설정
-	idx = "detizen_idx"
+	idx = "data_idx"
 	# "title" / "field" / "host" 검색 설정
 	case = "title"
 	
-	# 데이터 저장
+	# 대티즌 데이터 저장
 	data_store(idx)
+	
+	# 씽굿 데이터 저장
+	data_store2(idx)
 
 	# 데이터 전체 검색
 	print("전체 검색 결과")
