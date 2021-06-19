@@ -1,0 +1,80 @@
+#MenuBar {
+	height: 30px;
+	width: 1200px;
+}
+#MenuBar ul li {
+	list-style: none;
+	color: white;
+	background-color: #2d2d2d;
+	float: left;
+	line-height: 30px;
+	vertical-align: middle;
+	text-align: center;
+}
+#MenuBar .menu {
+	text-decoration: none;
+	color: white;
+	display: block;
+	width: 230px;
+	font-size: 12px;
+	font-weight: bold;
+	font-family: "Trebuchet MS", Dotum, Arial;
+}
+#MenuBar .menu:hover {
+	color: red;
+	background-color: #4d4d4d;
+}
+
+#contents {
+	height: 20px;
+	width: 850px;
+}
+#contents ul li {
+	list-style: none;
+	color: white;
+	background-color: #2d2d2d;
+	float: left;
+	line-height: 20px;
+	vertical-align: middle;
+	text-align: center;
+}
+#contents .elem-top{
+	text-decoration: none;
+	color: black;
+	display: block;
+	width: 150px;
+	font-size: 11px;
+	font-family: "맑은 고딕", Dotum, Arial;
+}
+
+table.result {
+border-collapse: collapse;
+text-align: center;
+line-height: 2;
+border-top: 1px solid #ccc;
+border-bottom: 1px solid #ccc;
+margin: 20px 10px;
+}
+
+table.result thead th {
+width: 170px;
+padding: 10px;
+font-weight: bold;
+vertical-align: top;
+color: #fff;
+background: #e7708d;
+margin: 20px 10px;
+}
+table.result tbody th {
+width: 150px;
+padding: 10px;
+}
+table.result td {
+width: 230px;
+padding: 10px;
+vertical-align: top;
+}
+table.result .erow {
+background: #fdf3f5;
+}
+

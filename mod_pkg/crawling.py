@@ -32,6 +32,14 @@ def SplitFieldString(s , wordlist=[ "분야" ] , dividchar=[",",":","/"]) :
     
     return list(filter(lambda x : x not in wordlist , list(map( str.strip , s.split(dividchar[0])))))
 
+
+
+
+
+
+
+
+
 def FindMaxPage_wevity(page ,URL ) :
     '''
      wevity의 사이트에서 공모전 목록 페이지가 얼마나 있는지 확인하는 함수
@@ -73,10 +81,17 @@ def FindMaxPage_wevity(page ,URL ) :
 #---------------------------------------------------------- crawling fuction ----------------------------------------------------------
 
 
-def CrawlingByField_wevity(whatfield=0 , mode="ing") :
+
+
+
+
+
+def CrawlingByField_wevity( pagenum , whatfield=0 , mode="") :
 
     """ ---------- wevity 크롤링 함수 ---------- 
      분야와 접수정보를 parameter로 받아 해당하는 페이지의 정보를 return
+
+     - page : 페이지 수 
     
      - filed : 분야 설정 (default : 0 - 모든분야 )
 
@@ -87,15 +102,17 @@ def CrawlingByField_wevity(whatfield=0 , mode="ing") :
         대외활동/서포터즈 - 27 , 봉사활동 - 89 , 취업/창업 - 88
         해외 - 28 , 기타 - 29
 
-     - mode :  접수 정보 (default : "ing" - 접수중 )
+     - mode :  접수 정보 (default : "" - 전체 )
 
         스페셜 - "spec" , 신규 - "new" , 마감임박 - "soon"
         접수중 - "ing", 접수예정 - "future" , 마감 - "end"
 
-     출력값 - 이름 , 분야 , 주최자 정보를 list로 가지는 dict
+     출력값 - 공모전 정보를 list로 가지는 dict
 
     """
-    mode = "&mode=" + mode
+    if mode != "" :
+        mode = "&mode=" + mode
+        
     if whatfield == 0 :
         whatfield = ""
     else :
@@ -105,31 +122,21 @@ def CrawlingByField_wevity(whatfield=0 , mode="ing") :
     response = requests.get(URL)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    page = 1    # 최종 페이지 탐색 while문에서 페이지넘버 값 저장
-    maximum = []    # index:0 => 최종 페이지 넘버 , index:1 => 이후페이지 존재여부 bool type 
-
-    while True :
-        maximum =  FindMaxPage_wevity(page,URL)
-        if not maximum[1] :
-            break
-        page = maximum[0] + 1
-
-
+    
     whole_source = "" # 페이지 순회하며 필요한 정보만 저장할 문자열
     URL = URL[:-1] 
 
     #해당 테이블을 포함하는 html들을 whole_sourse 문자열에 저장
-    for page_number in range(1, maximum[0]+1):
+    for page_number in range(1, pagenum):
 	    URLS = URL + str(page_number)
 	    response = requests.get(URLS)
 	    whole_source = whole_source + response.text
 
     # 출력값 - 이름 , 분야 , 주최자 정보를 list로 가지는 dict
-    result = { "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "dday-ing" : [] ,"url" : [] }
+    result = { "site" : [] , "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "dday-ing" : [] ,"url" : [] }
 
     #통합된 html에서 공모전 이름 , 분야 , 주최자 정보 추출 
     soup = BeautifulSoup(whole_source, 'html.parser')
-
 
 
     #############################################################################################
@@ -140,12 +147,8 @@ def CrawlingByField_wevity(whatfield=0 , mode="ing") :
     # title ( string ) - 공모전 이름을 저장하는 부분
     find_title = soup.select("li > div.tit > a")
     for title in find_title :
-        # get_title -  공모전의 url을 찾기 위해 세부링크로 이동
-        get_title = requests.get("https://www.wevity.com/" + title["href"])
-        url_soup = BeautifulSoup(get_title.text, 'html.parser')
-        for find_url in url_soup.select("div.contest-detail > div.cd-area > div.info > ul.cd-info-list > li:nth-child(8) > a") :
-            result["url"].append(find_url["href"])
-
+        result["url"].append("https://www.wevity.com/" + title["href"])
+        result["site"].append("wevity")
         # title은 a tag 안에 span tag가 자식태그로 있어서 자식 태그 span을 제외하고 a의 내용만 받아야 함
         t_soup = BeautifulSoup(str(title), 'html.parser')           # a tag => t_soup
         if t_soup.select('span') != [] :                            # span 태그가 자식으로 있다면
@@ -188,12 +191,13 @@ def CrawlingByField_wevity(whatfield=0 , mode="ing") :
 
 if __name__ == "__main__" :
     # 여기서 테스트 해보세요 
-    data = CrawlingByField_wevity(whatfield=2, mode="end")
+    #data = CrawlingByField_wevity(whatfield=2, mode="end")
     #data = CrawlingByField_wevity(whatfield=28, mode="soon")
     #data = CrawlingByField_wevity(whatfield=21)
-    #data = CrawlingByField_wevity()
+    data = CrawlingByField_wevity(2 , whatfield=0 , mode="ing")
     
     for i in range(len(data["title"])) :
+        print(data["site"][i])
         print(data["title"][i])
         print(data["field"][i])
         print(data["host"][i])
