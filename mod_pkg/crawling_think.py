@@ -44,7 +44,8 @@ def Crawling_think():
 		for b in field:
 			list_text=b.text
 			split_list=list_text.split()
-			result_think["field"].append(split_list)
+			sp=','.join(split_list)
+			result_think["field"].append(sp)
 
 		# 주최
 		host = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td:nth-of-type(2)")
@@ -71,10 +72,8 @@ def Crawling_think():
 
 	return result_think
 
-url = u'https://www.thinkcontest.com/Contest/CateField.html'
-
 if __name__ == '__main__':
-	# maximum = int(FindMaxPage_think(url))
+	
 	Crawling_think()
 
 	for i in range(len(result_think["title"])):

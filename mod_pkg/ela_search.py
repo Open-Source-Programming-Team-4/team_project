@@ -5,11 +5,9 @@ import pprint
 import crawling
 import crawling_de
 import crawling_think 
-import numpy as np
-from numpy.linalg import norm
-from numpy import dot
-from konlpy.tag import Okt
 from operator import itemgetter
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 '''
 *** elastic search module ***
@@ -17,7 +15,11 @@ from operator import itemgetter
 $ cd elasticsearch-7.6.2
 $ ./bin/elasticsearch
 
-Note : import crawling module "crawling.py" in current directory
+*****************************
+
+beautifulsoup4 version : 4.6.0
+install sklearn
+
 '''
 
 # Elasticsearch 설정
@@ -33,32 +35,18 @@ data_set = {
 	"host" : [],		( 주최사 )
 	"Dday" : [],		( 남은 기간 )
 	"dday-ing" : [],	( 진행상황 )
-	"url" : []		( 링크 )
+	"url" : []			( 링크 )
 }
 '''
 
-# wevity 모든 분야 / 접수 중 데이터 전체 가져오기
-#wevity_data_ing = crawling.CrawlingByField_wevity(2, "end")
+# 위비티 크롤링 데이터 가져오기
+
 
 # 대티즌 크롤링 데이터 가져오기
-detizen_data = crawling_de.crawling_detizen(10)
+detizen_data = crawling_de.crawling_detizen(50)
 
 # 씽굿 크롤링 데이터 가져오기
 think_data = crawling_think.Crawling_think()
-
-def data_store2(idx):
-	for i in range(len(think_data['site'])):
-		input_data = {
-			'site': think_data['site'][i],
-			'title': think_data['title'][i],
-			'field': think_data['field'][i],
-			'host': think_data['host'][i],
-			'Dday': think_data['Dday'][i],
-			'dday-ing': think_data['dday-ing'][i],
-			'url': think_data['url'][i]
-		}
-		res = es.index(index=idx, doc_type="_doc", id=i+1, body=input_data)
-#		print(res)
 
 # 데이터 저장
 def data_store(idx):
@@ -72,37 +60,31 @@ def data_store(idx):
 			"dday-ing" : detizen_data["dday-ing"][i],
 			"url" : detizen_data["url"][i]
 		}
-		res = es.index(index=idx, doc_type="_doc", id=i+1, body=input_data)
+		res = es.index(index=idx, doc_type="_doc", id=i, body=input_data)
 #		print(res)
 
-# 형태소 분석 & Cosine Similarity
-def cos_sim(a, b):
-	return dot(a, b)/(norm(a)*norm(b))
+def data_store2(idx):
+	for i in range(len(think_data['site'])):
+		input_data = {
+			'site': think_data['site'][i],
+			'title': think_data['title'][i],
+			'field': think_data['field'][i],
+			'host': think_data['host'][i],
+			'Dday': think_data['Dday'][i],
+			'dday-ing': think_data['dday-ing'][i],
+			'url': think_data['url'][i]
+		}
+		res = es.index(index=idx, doc_type="_doc", id=len(detizen_data['site']), body=input_data)
+#		print(res)
 
-def make_matrix(feats, list_data):
-	freq_list = []
-	for feat in feats:
-		freq = 0
-		for word in list_data:
-			if feat == word:
-				freq += 1
-		freq_list.append(freq)
-	return freq_list
+# 코사인 유사도 분석 tfidf & cosine similarity
+def cal_CoSim(input_str, search_str):
+	sent = (input_str, search_str)
+	tfidf_vectorizer = TfidfVectorizer()
+	tfidf_matrix = tfidf_vectorizer.fit_transform(sent)
 
-def KoNLPy_data(input_str, search_str):
-	okt = Okt()
-	text1 = okt.nouns(input_str)
-	text2 = okt.nouns(search_str)
-	
-	text3 = text1 + text2
-	feats = set(text3)
+	cs = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
 
-	text1_arr = np.array(make_matrix(feats, text1))
-	text2_arr = np.array(make_matrix(feats, text2))
-	
-	cs = cos_sim(text1_arr, text2_arr)
-
-#	print(cs)
 	return cs
 
 # 저장 된 전체 데이터 검색
@@ -110,8 +92,8 @@ def data_search_all(idx):
 	data = {"match_all": {}}
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
-	print("전체 검색 결과")
-	pprint.pprint(res)
+#	print("전체 검색 결과")
+#	pprint.pprint(res)
 #	for hit in res["hits"]["hits"]:
 #		print(hit["_source"])
 	
@@ -171,7 +153,7 @@ def data_search_cs(case, idx, input_str):
 		tmp['Dday'].append(hit['_source']['Dday'])
 		tmp['dday-ing'].append(hit['_source']['dday-ing'])
 		tmp['url'].append(hit['_source']['url'])
-		tmp['score'].append(KoNLPy_data(input_str, hit['_source'][case]))
+		tmp['score'].append(cal_CoSim(input_str, hit['_source'][case]))
 
 	tmp_list = []
 	for i in range(len(tmp['site'])):
@@ -213,6 +195,8 @@ if __name__ == "__main__" :
 	# "title" / "field" / "host" 검색 설정
 	case = "title"
 	
+	# 위비티 데이터 저장
+
 	# 대티즌 데이터 저장
 	data_store(idx)
 	
@@ -220,11 +204,11 @@ if __name__ == "__main__" :
 	data_store2(idx)
 
 	# 데이터 전체 검색
-	print("전체 검색 결과")
-	data_search_all(idx)
+#	print("전체 검색 결과")
+#	data_search_all(idx)
 	# 검색 기능 테스트
-	print("검색 결과")
-	data_search(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+#	print("검색 결과")
+#	data_search(case, idx, "2021 일본군 '위안부' 피해자 관련 청소년 작품공모전")
 	# 코사인 유사도 적용 검색 기능 테스트
 	print("코사인 유사도 적용 검색 결과")
-	data_search_cs(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+	data_search_cs(case, idx, "2021 일본군 '위안부' 피해자 관련 청소년 작품공모전")
