@@ -133,6 +133,35 @@ def data_search(case, idx, input_str):
 	pprint.pprint(output)
 	return output
 
+# 통합 검색기능 - 테스트 필요
+def data_search_allField(idx,search_word): 
+	res = {'site': [], 'title': [], 'field': [], 'host': [], 'Dday': [], 'dday-ing': [], 'url': []}
+
+	resp = es.search(index = idx,size=10000, body={"query": {"multi_match": {"query": search_word}}})
+	
+	for doc in resp['hits']['hits']:
+		res['site'].append(doc['_source']['site'])	
+		res['title'].append(doc['_source']['title'])
+		res['field'].append(doc['_source']['field'])
+		res['host'].append(doc['_source']['host'])
+		res['Dday'].append(doc['_source']['Dday'])
+		res['dday-ing'].append(doc['_source']['dday-ing'])
+		res['url'].append(doc['_source']['url'])
+	
+	# 최대 5개 결과까지 출력
+	output = {'site': [], 'title': [], 'field': [], 'host': [], 'Dday': [], 'dday-ing': [], 'url': []}
+	for i in range(5):
+		output['site'].append(tmp['site'][i])
+		output['title'].append(tmp['title'][i])
+		output['field'].append(tmp['field'][i])
+		output['host'].append(tmp['host'][i])
+		output['Dday'].append(tmp['Dday'][i])
+		output['dday-ing'].append(tmp['dday-ing'][i])
+		output['url'].append(tmp['url'][i])
+		
+	pprint.pprint(output)
+	return output
+
 # Cosine Similarity
 # 검색 기능 - case 변수에 "title" / "field" / "host" 지정
 def data_search_cs(case, idx, input_str):
