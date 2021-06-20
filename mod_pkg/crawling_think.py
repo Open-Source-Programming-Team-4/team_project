@@ -26,7 +26,7 @@ result_think = {
 }
 
 def Crawling_think():
-	for num in range(1,400):
+	for num in range(1,161):
 		num = str(num)
 		url='https://www.thinkcontest.com/Contest/CateField.html'+'?page=' + num
 		res=requests.get(url)
