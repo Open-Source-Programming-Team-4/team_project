@@ -22,10 +22,10 @@ from bs4 import BeautifulSoup
 
 result_think = { "site" : [] , "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "dday-ing" : [] ,"url" : [] }
 
-def Crawling_think(url):
- for num in range(1,400):
+def Crawling_think():
+ for num in range(1,161):
   num = str(num)
-  url='https://www.thinkcontest.com/Contest/CateField.html'+'?page=' + num
+  url='https://www.thinkcontest.com/Contest/CateField.html?page=' + num
   res=requests.get(url)
   soup=BeautifulSoup(res.content,"html.parser")
   for n in range(10):
@@ -41,7 +41,8 @@ def Crawling_think(url):
   for b in field:
    list_text=b.text
    split_list=list_text.split()
-   result_think["field"].append(split_list)
+   sp=','.join(split_list)
+   result_think["field"].append(sp)
 
 #주최
   host = soup.select("#main > div > div.body.contest-cate > div > table > tbody > tr > td:nth-of-type(2)")
@@ -66,12 +67,11 @@ def Crawling_think(url):
   for f in URL_list:
    result_think["url"].append(aa+f["href"])
   
-
+ return result_think
+  
 if __name__ == '__main__':
-	url = u'https://www.thinkcontest.com/Contest/CateField.html'
- 
-  #maximum = int(FindMaxPage_think(url))
-	Crawling_think(url)
+	
+	Crawling_think()
   
 	for i in range(len(result_think["title"])):
          print(result_think["site"][i])
