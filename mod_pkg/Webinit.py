@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 
 
-def search(searchobject):
+def search(searchobject, case):
   idx = "data_idx"
         # "title" / "field" / "host" 검색 설정
-  case = "title"
   dt = data_search_cs(case, idx, searchobject)
   
   return dt

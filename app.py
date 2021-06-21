@@ -12,7 +12,8 @@ def test():
 @app.route('/search_action', methods=['GET','POST'])
 def searchaction():
   rch = request.form['search']
-  res = search(rch)
+  setpr = request.form['setp']
+  res = search(rch, setpr)
 
   return res
 
