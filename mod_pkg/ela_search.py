@@ -62,7 +62,7 @@ data_set = {
 	"field" : [],		( 분야 )
 	"host" : [],		( 주최사 )
 	"Dday" : [],		( 남은 기간 )
-	"dday-ing" : [],	( 진행상황 )
+	"ddaying" : [],   	( 진행상황 )
 	"url" : []			( 링크 )
 }
 '''
@@ -85,7 +85,7 @@ def data_store(idx):
 			"field" : detizen_data["field"][i],
 			"host" : detizen_data["host"][i],
 			"Dday" : detizen_data["Dday"][i],
-			"dday-ing" : detizen_data["dday-ing"][i],
+			"ddaying" : detizen_data["ddaying"][i],
 			"url" : detizen_data["url"][i]
 		}
 		res = es.index(index=idx, doc_type="_doc", id=i, body=input_data)
@@ -99,7 +99,7 @@ def data_store2(idx):
 			'field': think_data['field'][i],
 			'host': think_data['host'][i],
 			'Dday': think_data['Dday'][i],
-			'dday-ing': think_data['dday-ing'][i],
+			'ddaying': think_data['ddaying'][i],
 			'url': think_data['url'][i]
 		}
 		res = es.index(index=idx, doc_type="_doc", id=len(detizen_data['site']), body=input_data)
@@ -136,26 +136,26 @@ def data_search(case, idx, input_str):
 #	pprint.pprint(res)
 
 	tmp = {'site': [], 'title': [], 'field': [],
-		'host': [], 'Dday': [], 'dday-ing': [], 'url': []}
+		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
 	for hit in res['hits']['hits']:
 		tmp['site'].append(hit['_source']['site'])
 		tmp['title'].append(hit['_source']['title'])
 		tmp['field'].append(hit['_source']['field'])
 		tmp['host'].append(hit['_source']['host'])
 		tmp['Dday'].append(hit['_source']['Dday'])
-		tmp['dday-ing'].append(hit['_source']['dday-ing'])
+		tmp['ddaying'].append(hit['_source']['ddaying'])
 		tmp['url'].append(hit['_source']['url'])
 	
 	# 최대 5개 결과까지 출력
 	output = {'site': [], 'title': [], 'field': [],
-		'host': [], 'Dday': [], 'dday-ing': [], 'url': []}
+		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
 	for i in range(5):
 		output['site'].append(tmp['site'][i])
 		output['title'].append(tmp['title'][i])
 		output['field'].append(tmp['field'][i])
 		output['host'].append(tmp['host'][i])
 		output['Dday'].append(tmp['Dday'][i])
-		output['dday-ing'].append(tmp['dday-ing'][i])
+		output['ddaying'].append(tmp['ddaying'][i])
 		output['url'].append(tmp['url'][i])
 	
 	pprint.pprint(output)
@@ -163,7 +163,7 @@ def data_search(case, idx, input_str):
 
 # 통합 검색기능 - 테스트 필요
 def data_search_allField(idx,search_word): 
-	res = {'site': [], 'title': [], 'field': [], 'host': [], 'Dday': [], 'dday-ing': [], 'url': []}
+	res = {'site': [], 'title': [], 'field': [], 'host': [], 'Dday': [], 'ddaying': [], 'url': []}
 
 	resp = es.search(index = idx,size=10000, body={"query": {"multi_match": {"query": search_word}}})
 	
@@ -173,18 +173,18 @@ def data_search_allField(idx,search_word):
 		res['field'].append(doc['_source']['field'])
 		res['host'].append(doc['_source']['host'])
 		res['Dday'].append(doc['_source']['Dday'])
-		res['dday-ing'].append(doc['_source']['dday-ing'])
+		res['ddaying'].append(doc['_source']['ddaying'])
 		res['url'].append(doc['_source']['url'])
 	
 	# 최대 5개 결과까지 출력
-	output = {'site': [], 'title': [], 'field': [], 'host': [], 'Dday': [], 'dday-ing': [], 'url': []}
+	output = {'site': [], 'title': [], 'field': [], 'host': [], 'Dday': [], 'ddaying': [], 'url': []}
 	for i in range(5):
 		output['site'].append(tmp['site'][i])
 		output['title'].append(tmp['title'][i])
 		output['field'].append(tmp['field'][i])
 		output['host'].append(tmp['host'][i])
 		output['Dday'].append(tmp['Dday'][i])
-		output['dday-ing'].append(tmp['dday-ing'][i])
+		output['ddaying'].append(tmp['ddaying'][i])
 		output['url'].append(tmp['url'][i])
 		
 	pprint.pprint(output)
@@ -200,7 +200,7 @@ def data_search_cs(case, idx, input_str):
 #	pprint.pprint(res)
 
 	tmp = {'site': [], 'title': [], 'field': [],
-		'host': [], 'Dday': [], 'dday-ing': [], 'url': [],
+		'host': [], 'Dday': [], 'ddaying': [], 'url': [],
 		'score': []}
 	for hit in res['hits']['hits']:
 		tmp['site'].append(hit['_source']['site'])
@@ -208,7 +208,7 @@ def data_search_cs(case, idx, input_str):
 		tmp['field'].append(hit['_source']['field'])
 		tmp['host'].append(hit['_source']['host'])
 		tmp['Dday'].append(hit['_source']['Dday'])
-		tmp['dday-ing'].append(hit['_source']['dday-ing'])
+		tmp['ddaying'].append(hit['_source']['ddaying'])
 		tmp['url'].append(hit['_source']['url'])
 		tmp['score'].append(cal_CoSim(input_str, hit['_source'][case]))
 
@@ -216,7 +216,7 @@ def data_search_cs(case, idx, input_str):
 	for i in range(len(tmp['site'])):
 		tmp_list.append({'site': tmp['site'][i], 'title': tmp['title'][i],
 				'field': tmp['field'][i], 'host': tmp['host'][i],
-				'Dday': tmp['Dday'][i], 'dday-ing': tmp['dday-ing'][i],
+				'Dday': tmp['Dday'][i], 'ddaying': tmp['ddaying'][i],
 				'url': tmp['url'][i], 'score': tmp['score'][i]})
 	tmp_list = sorted(tmp_list, key=itemgetter('score'), reverse=True)
 
@@ -226,20 +226,20 @@ def data_search_cs(case, idx, input_str):
 		tmp['field'][i] = tmp_list[i]['field']
 		tmp['host'][i] = tmp_list[i]['host']
 		tmp['Dday'][i] = tmp_list[i]['Dday']
-		tmp['dday-ing'][i] = tmp_list[i]['dday-ing']
+		tmp['ddaying'][i] = tmp_list[i]['ddaying']
 		tmp['url'][i] = tmp_list[i]['url']
 		tmp['score'][i] = tmp_list[i]['score']
 	
 	# 최대 5개 결과까지 출력
 	output = {'site': [], 'title': [], 'field': [],
-		'host': [], 'Dday': [], 'dday-ing': [], 'url': []}
+		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
 	for i in range(5):
 		output['site'].append(tmp['site'][i])
 		output['title'].append(tmp['title'][i])
 		output['field'].append(tmp['field'][i])
 		output['host'].append(tmp['host'][i])
 		output['Dday'].append(tmp['Dday'][i])
-		output['dday-ing'].append(tmp['dday-ing'][i])
+		output['ddaying'].append(tmp['ddaying'][i])
 		output['url'].append(tmp['url'][i])
 
 	pprint.pprint(output)
