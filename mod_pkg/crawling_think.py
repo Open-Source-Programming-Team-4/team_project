@@ -5,7 +5,7 @@
 result(dict)의 각 0번들 
 씽굿
 2021 그린스마트 미래학교「가상설계 및 콘텐츠」공모전
-['논문/리포트', '기획/아이디어', '디자인', 'UCC/영상', '문학/수기', '건축/건설']
+'논문/리포트', '기획/아이디어', '디자인', 'UCC/영상', '문학/수기', '건축/건설'
 교육부, 전국 17개 시ㆍ도교육청
 D-2
 접수예정
@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 
 result_think = {
 	"site" : [], "title" : [], "field" : [], 
-	"host" : [], "Dday" : [], "dday-ing" : [], "url" : []
+	"host" : [], "Dday" : [], "dday_ing" : [], "url" : []
 }
 
 def Crawling_think():
@@ -58,10 +58,10 @@ def Crawling_think():
 			d_list = d.text
 			d_split=d_list.split()
 			if (d_split[0]=="마감"):
-				result_think["dday-ing"].append(d_split[0])
+				result_think["dday_ing"].append(d_split[0])
 				result_think["Dday"].append("-")
 			else:
-				result_think["dday-ing"].append(d_split[0])
+				result_think["dday_ing"].append(d_split[0])
 				result_think["Dday"].append(d_split[1])
 
 		# URL
@@ -82,5 +82,5 @@ if __name__ == '__main__':
 		print(result_think["field"][i])
 		print(result_think["host"][i])
 		print(result_think["Dday"][i])
-		print(result_think["dday-ing"][i])
+		print(result_think["dday_ing"][i])
 		print(result_think["url"][i])
