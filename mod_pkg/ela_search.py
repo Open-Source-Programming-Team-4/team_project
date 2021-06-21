@@ -2,9 +2,6 @@
 
 from elasticsearch import Elasticsearch
 import pprint
-import crawling
-import crawling_de
-import crawling_think 
 import numpy as np
 from numpy.linalg import norm
 from numpy import dot
@@ -19,6 +16,38 @@ $ ./bin/elasticsearch
 
 Note : import crawling module "crawling.py" in current directory
 '''
+
+
+''' 데이터 저장 & 검색 테스트 '''
+if __name__ == "__main__":
+        import crawling
+        import crawling_de
+        import crawling_think
+        # index 설정
+        idx = "data_idx"
+        # "title" / "field" / "host" 검색 설정
+        case = "title"
+
+        # 대티즌 데이터 저장
+        data_store(idx)
+
+        # 씽굿 데이터 저장
+        data_store2(idx)
+
+        # 데이터 전체 검색
+        print("전체 검색 결과")
+        data_search_all(idx)
+        # 검색 기능 테스트
+        print("검색 결과")
+        data_search(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+        # 코사인 유사도 적용 검색 기능 테스트
+        print("코사인 유사도 적용 검색 결과")
+        data_search_cs(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+else:
+        import mod_pkg.crawling as crawling
+        import mod_pkg.crawling_de as crawling_de
+        import mod_pkg.crawling_think as crawling_think
+
 
 # Elasticsearch 설정
 es_host = '127.0.0.1'
@@ -207,24 +236,31 @@ def data_search_cs(case, idx, input_str):
 	return output
 
 ''' 데이터 저장 & 검색 테스트 '''
-if __name__ == "__main__" :
-	# index 설정
-	idx = "data_idx"
-	# "title" / "field" / "host" 검색 설정
-	case = "title"
-	
-	# 대티즌 데이터 저장
-	data_store(idx)
-	
-	# 씽굿 데이터 저장
-	data_store2(idx)
+if __name__ == "__main__":
+        import crawling
+        import crawling_de
+        import crawling_think
+        # index 설정
+        idx = "data_idx"
+        # "title" / "field" / "host" 검색 설정
+        case = "title"
+        
+        # 대티즌 데이터 저장
+        data_store(idx)
 
-	# 데이터 전체 검색
-	print("전체 검색 결과")
-	data_search_all(idx)
-	# 검색 기능 테스트
-	print("검색 결과")
-	data_search(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
-	# 코사인 유사도 적용 검색 기능 테스트
-	print("코사인 유사도 적용 검색 결과")
-	data_search_cs(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+        # 씽굿 데이터 저장
+        data_store2(idx)
+
+        # 데이터 전체 검색
+        print("전체 검색 결과")
+        data_search_all(idx)
+        # 검색 기능 테스트
+        print("검색 결과")
+        data_search(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+        # 코사인 유사도 적용 검색 기능 테스트
+        print("코사인 유사도 적용 검색 결과")
+        data_search_cs(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+else:
+        import mod_pkg.crawling
+        import mod_pkg.crawling_de
+        import mod_pkg.crawling_think

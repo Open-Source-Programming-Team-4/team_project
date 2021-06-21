@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-#from mod_pkg.Webinit import *
+from mod_pkg.Webinit import search
 app = Flask(__name__)
 
 @app.route('/')
@@ -12,11 +12,10 @@ def test():
 @app.route('/search_action', methods=['GET','POST'])
 def searchaction():
   rch = request.form['search']
-  #res = search(rch)
+  res = search(rch)
 
-  return rch
+  return res
 
 
 if __name__=='__main__':
   app.run()
-~                         
