@@ -4,8 +4,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-  return render_template('main.html')
-
+    return render_template('main.html', rest={'site': ['t1', 't2'], 'title': ['t1'], 'host': ['testhost'],  'Dday': ['0']})
+#추후 elasticsearch 결과코드로 대체될 예정
 @app.route('/connectiontest')
 def test():
   return 'CONNECTION TEST PAGE - Connection Success!'
