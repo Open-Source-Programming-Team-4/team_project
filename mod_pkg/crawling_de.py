@@ -20,7 +20,7 @@ def crawling_detizen ( pageNum ) :
 
     soup = BeautifulSoup(whole_source, 'html.parser')
     items = soup.select("#Contents > #Main .basic-list.page-list > li")
-    result = { "site" : [] , "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "dday-ing" : [] ,"url" : [] }
+    result = { "site" : [] , "title" : [] , "field" : [] , "host" : [] , "Dday" : [] , "ddaying" : [] ,"url" : [] }
     
     for item in items :
         result["site"].append("detizen")
@@ -28,7 +28,7 @@ def crawling_detizen ( pageNum ) :
         result["host"].append(item.select_one("p:nth-of-type(1) > span").text)
         item.select_one("p:nth-of-type(1) > span").decompose()
         result["Dday"].append(item.select_one("div.main-info > p > span").text)
-        result["dday-ing"].append("-")
+        result["ddaying"].append("-")
         result["field"].append(','.join(split_txt(item.select_one("p:nth-of-type(1)").text)))
         result["url"].append(URL[:-4] + item.select_one("div.main-info > h4 > a:nth-of-type(1)")["href"])
         
@@ -44,7 +44,7 @@ if __name__ == "__main__" :
         print(" 주최사 : " + str(result["host"][i]))
         print(" 분야 : " + str(result["field"][i]))
         print(" D-day : " + result["Dday"][i])
-        print(" 진행상황 : " + result["dday-ing"][i])
+        print(" 진행상황 : " + result["ddaying"][i])
         print(" URL : " + result["url"][i])
     print("크롤링한 공모전의 수는 " +str(data_num) + "개입니다.")
     
