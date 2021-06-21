@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 
 result_think = {
 	"site" : [], "title" : [], "field" : [], 
-	"host" : [], "Dday" : [], "dday_ing" : [], "url" : []
+	"host" : [], "Dday" : [], "ddaying" : [], "url" : []
 }
 
 def Crawling_think():
@@ -58,10 +58,10 @@ def Crawling_think():
 			d_list = d.text
 			d_split=d_list.split()
 			if (d_split[0]=="마감"):
-				result_think["dday_ing"].append(d_split[0])
+				result_think["ddaying"].append(d_split[0])
 				result_think["Dday"].append("-")
 			else:
-				result_think["dday_ing"].append(d_split[0])
+				result_think["ddaying"].append(d_split[0])
 				result_think["Dday"].append(d_split[1])
 
 		# URL
@@ -82,5 +82,5 @@ if __name__ == '__main__':
 		print(result_think["field"][i])
 		print(result_think["host"][i])
 		print(result_think["Dday"][i])
-		print(result_think["dday_ing"][i])
+		print(result_think["ddaying"][i])
 		print(result_think["url"][i])
