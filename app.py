@@ -13,6 +13,8 @@ def test():
 def searchaction():
   rch = request.form['search']
   setpr = request.form['setp']
+  print(rch)
+  print(setpr)
   res = search(rch, setpr)
 
   return res
