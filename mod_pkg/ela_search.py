@@ -35,6 +35,9 @@ if __name__ == "__main__":
         # 씽굿 데이터 저장
         data_store2(idx)
 
+		# 위비티 데이터 저장
+		data_store3(idx)
+
         # 데이터 전체 검색
         print("전체 검색 결과")
         data_search_all(idx)
@@ -68,7 +71,7 @@ data_set = {
 '''
 
 # 위비티 크롤링 데이터 가져오기
-
+wevity_data = crawling.Crawling_wevity(20)
 
 # 대티즌 크롤링 데이터 가져오기
 detizen_data = crawling_de.crawling_detizen(50)
@@ -102,8 +105,21 @@ def data_store2(idx):
 			'ddaying': think_data['ddaying'][i],
 			'url': think_data['url'][i]
 		}
-		res = es.index(index=idx, doc_type="_doc", id=len(detizen_data['site']), body=input_data)
+		res = es.index(index=idx, doc_type="_doc", id=i+len(detizen_data['site']), body=input_data)
 #		print(res)
+
+def data_store3(idx):
+	for i in range(len(wevity_data['site'])):
+		input_data = {
+			'site': wevity_data['site'][i],
+			'title': wevity_data['title'][i],
+			'field': wevity_data['field'][i],
+			'host' : wevity_data['host'][i],
+			'Dday' : wevity_data['Dday'][i],
+			'ddaying' : wevity_data['ddaying'][i],
+			'url' : wevity_data['url'][i]
+		}
+		res = es.index(index=idx, doc_type="_doc", id=i+len(detizen_data['site'])+len(think_data['site']), body=input_data)
 
 # 코사인 유사도 분석 tfidf & cosine similarity
 def cal_CoSim(input_str, search_str):
