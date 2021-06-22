@@ -1,5 +1,9 @@
+#!/usr/bin/python3
+#-*- coding: utf-8 -*-
+
 from flask import Flask, render_template, request
 from mod_pkg.Webinit import search
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -22,4 +26,6 @@ def searchaction():
 
 
 if __name__=='__main__':
-  app.run()
+  ipaddr="127.0.0.1"
+  print("Starting the service with ip_addr="+ipaddr)
+  app.run(debug=False, host=ipaddr, port=5000)

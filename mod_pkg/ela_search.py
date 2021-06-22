@@ -196,8 +196,8 @@ def data_search_cs(case, idx, input_str):
 	data = {"match": {case: input_str}}
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
-#	print("검색결과")
-#	pprint.pprint(res)
+	print("검색결과")
+	pprint.pprint(res)
 
 	tmp = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': [],
@@ -208,7 +208,7 @@ def data_search_cs(case, idx, input_str):
 		tmp['field'].append(hit['_source']['field'])
 		tmp['host'].append(hit['_source']['host'])
 		tmp['Dday'].append(hit['_source']['Dday'])
-		tmp['ddaying'].append(hit['_source']['dday-ing'])
+		tmp['ddaying'].append(hit['_source']['ddaying'])
 		tmp['url'].append(hit['_source']['url'])
 		tmp['score'].append(cal_CoSim(input_str, hit['_source'][case]))
 
