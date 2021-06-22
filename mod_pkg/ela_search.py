@@ -113,30 +113,35 @@ def data_search(case, idx, input_str):
 	data = {"match": {case: input_str}}
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
-
+	max_res = 5
+	if max_res < res['hits']['total']['value']:
+		max_res = 5
+	if max_res > res['hits']['total']['value']:
+		max_res = res['hits']['total']['value']
 	tmp = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
-	for hit in res['hits']['hits']:
-		tmp['site'].append(hit['_source']['site'])
-		tmp['title'].append(hit['_source']['title'])
-		tmp['field'].append(hit['_source']['field'])
-		tmp['host'].append(hit['_source']['host'])
-		tmp['Dday'].append(hit['_source']['Dday'])
-		tmp['ddaying'].append(hit['_source']['ddaying'])
-		tmp['url'].append(hit['_source']['url'])
-	
-	# 최대 5개 결과까지 출력
 	output = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
-	for i in range(5):
-		output['site'].append(tmp['site'][i])
-		output['title'].append(tmp['title'][i])
-		output['field'].append(tmp['field'][i])
-		output['host'].append(tmp['host'][i])
-		output['Dday'].append(tmp['Dday'][i])
-		output['ddaying'].append(tmp['ddaying'][i])
-		output['url'].append(tmp['url'][i])
+	if res['hits']['total']['value']>0:
+		for hit in res['hits']['hits']:
+			tmp['site'].append(hit['_source']['site'])
+			tmp['title'].append(hit['_source']['title'])
+			tmp['field'].append(hit['_source']['field'])
+			tmp['host'].append(hit['_source']['host'])
+			tmp['Dday'].append(hit['_source']['Dday'])
+			tmp['ddaying'].append(hit['_source']['ddaying'])
+			tmp['url'].append(hit['_source']['url'])
+		
+		for i in range(max_res):
+			output['site'].append(tmp['site'][i])
+			output['title'].append(tmp['title'][i])
+			output['field'].append(tmp['field'][i])
+			output['host'].append(tmp['host'][i])
+			output['Dday'].append(tmp['Dday'][i])
+			output['ddaying'].append(tmp['ddaying'][i])
+			output['url'].append(tmp['url'][i])
 	
+	pprint.pprint(output)
 	return output
 
 # 통합 검색기능 - 테스트 필요
@@ -174,49 +179,53 @@ def data_search_cs(case, idx, input_str):
 	data = {"match": {case: input_str}}
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
-
+	max_res = 5
+	if max_res < res['hits']['total']['value']:
+		max_res = 5
+	if max_res > res['hits']['total']['value']:
+		max_res = res['hits']['total']['value']
 	tmp = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': [],
 		'score': []}
-	for hit in res['hits']['hits']:
-		tmp['site'].append(hit['_source']['site'])
-		tmp['title'].append(hit['_source']['title'])
-		tmp['field'].append(hit['_source']['field'])
-		tmp['host'].append(hit['_source']['host'])
-		tmp['Dday'].append(hit['_source']['Dday'])
-		tmp['ddaying'].append(hit['_source']['ddaying'])
-		tmp['url'].append(hit['_source']['url'])
-		tmp['score'].append(cal_CoSim(input_str, hit['_source'][case]))
-
-	tmp_list = []
-	for i in range(len(tmp['site'])):
-		tmp_list.append({'site': tmp['site'][i], 'title': tmp['title'][i],
-				'field': tmp['field'][i], 'host': tmp['host'][i],
-				'Dday': tmp['Dday'][i], 'ddaying': tmp['ddaying'][i],
-				'url': tmp['url'][i], 'score': tmp['score'][i]})
-	tmp_list = sorted(tmp_list, key=itemgetter('score'), reverse=True)
-
-	for i in range(len(tmp['site'])):
-		tmp['site'][i] = tmp_list[i]['site']
-		tmp['title'][i] = tmp_list[i]['title']
-		tmp['field'][i] = tmp_list[i]['field']
-		tmp['host'][i] = tmp_list[i]['host']
-		tmp['Dday'][i] = tmp_list[i]['Dday']
-		tmp['ddaying'][i] = tmp_list[i]['ddaying']
-		tmp['url'][i] = tmp_list[i]['url']
-		tmp['score'][i] = tmp_list[i]['score']
-	
-	# 최대 5개 결과까지 출력
 	output = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
-	for i in range(5):
-		output['site'].append(tmp['site'][i])
-		output['title'].append(tmp['title'][i])
-		output['field'].append(tmp['field'][i])
-		output['host'].append(tmp['host'][i])
-		output['Dday'].append(tmp['Dday'][i])
-		output['ddaying'].append(tmp['ddaying'][i])
-		output['url'].append(tmp['url'][i])
+	if res['hits']['total']['value']>0:
+		for hit in res['hits']['hits']:
+			tmp['site'].append(hit['_source']['site'])
+			tmp['title'].append(hit['_source']['title'])
+			tmp['field'].append(hit['_source']['field'])
+			tmp['host'].append(hit['_source']['host'])
+			tmp['Dday'].append(hit['_source']['Dday'])
+			tmp['ddaying'].append(hit['_source']['ddaying'])
+			tmp['url'].append(hit['_source']['url'])
+			tmp['score'].append(cal_CoSim(input_str, hit['_source'][case]))
+
+		tmp_list = []
+		for i in range(len(tmp['site'])):
+			tmp_list.append({'site': tmp['site'][i], 'title': tmp['title'][i],
+					'field': tmp['field'][i], 'host': tmp['host'][i],
+					'Dday': tmp['Dday'][i], 'ddaying': tmp['ddaying'][i],
+					'url': tmp['url'][i], 'score': tmp['score'][i]})
+		tmp_list = sorted(tmp_list, key=itemgetter('score'), reverse=True)
+
+		for i in range(len(tmp['site'])):
+			tmp['site'][i] = tmp_list[i]['site']
+			tmp['title'][i] = tmp_list[i]['title']
+			tmp['field'][i] = tmp_list[i]['field']
+			tmp['host'][i] = tmp_list[i]['host']
+			tmp['Dday'][i] = tmp_list[i]['Dday']
+			tmp['ddaying'][i] = tmp_list[i]['ddaying']
+			tmp['url'][i] = tmp_list[i]['url']
+			tmp['score'][i] = tmp_list[i]['score']
+	
+		for i in range(max_res):
+			output['site'].append(tmp['site'][i])
+			output['title'].append(tmp['title'][i])
+			output['field'].append(tmp['field'][i])
+			output['host'].append(tmp['host'][i])
+			output['Dday'].append(tmp['Dday'][i])
+			output['ddaying'].append(tmp['ddaying'][i])
+			output['url'].append(tmp['url'][i])
 
 	pprint.pprint(output)
 	return output
@@ -244,7 +253,7 @@ if __name__ == "__main__":
 #	data_search_all(idx)
 	# 검색 기능 테스트
 #	print("검색 결과")
-#	data_search(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+	data_search(case, idx, "대구")
 	# 코사인 유사도 적용 검색 기능 테스트
 	print("코사인 유사도 적용 검색 결과")
-	data_search_cs(case, idx, "대구")
+	data_search_cs(case, idx, "사자")
