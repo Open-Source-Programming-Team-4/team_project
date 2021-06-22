@@ -43,27 +43,24 @@
 				</tr>
 			</thead>
 			<tbody>
+				{% for i in range(0,5) %}
+                                <tr>
+                                        <td>
+                                                {{rest.site[i]}}
+                                        </td>
+                                        <td>
+                                                {{rest.title[i]}}
+                                        </td>
+                                        <td>
+                                                {{rest.host[i]}}
+                                        </td>
+                                        <td>
+                                                {{rest.ddaying[i]}}/{{rest.Dday[i]}}
+                                        </td>
+                                </tr>
+                                {% endfor %}
+
 				
-				<tr>
-					<td>
-						{{rest.site[0]}}
-					</td>
-					<td>
-						{{rest.title[0]}}
-					</td>
-					<td>
-						{{rest.host[0]}}
-					</td>
-					<td>
-						{{rest.ddaying[0]}}/{{rest.Dday[0]}}
-					</td>
-				</tr>
-				<tr>
-					<th scope="row" class="erow">짝수테스트</th>
-					<td class="erow">주최기간2테스트</td>
-					<td class="erow">테스트2</td>
-					<td class="erow">디데이2테스트</td>
-				</tr>
 			</tbody>
 		</table>
 				
