@@ -35,8 +35,8 @@ if __name__ == "__main__":
         # 씽굿 데이터 저장
         data_store2(idx)
 
-		# 위비티 데이터 저장
-		data_store3(idx)
+	# 위비티 데이터 저장
+	data_store3(idx)
 
         # 데이터 전체 검색
         print("전체 검색 결과")
