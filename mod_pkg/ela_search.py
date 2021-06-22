@@ -5,9 +5,15 @@ import pprint
 from operator import itemgetter
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
-import crawling as crawling
-import crawling_de as crawling_de
-import crawling_think as crawling_think
+
+if __name__=='__main__':
+	import crawling as crawling
+	import crawling_de as crawling_de
+	import crawling_think as crawling_think
+else:
+	import mod_pkg.crawling as crawling
+	import mod_pkg.crawling_de as crawling_de
+	import mod_pkg.crawling_think as crawling_think
 
 '''
 *** elastic search module ***
@@ -40,7 +46,7 @@ data_set = {
 '''
 
 # 위비티 크롤링 데이터 가져오기
-#wevity_data = crawling.Crawling_wevity(20)
+wevity_data = crawling.Crawling_wevity(20)
 
 # 대티즌 크롤링 데이터 가져오기
 #detizen_data = crawling_de.crawling_detizen(50)
