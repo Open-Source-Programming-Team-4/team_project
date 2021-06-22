@@ -45,14 +45,10 @@ data_set = {
 }
 '''
 
-# 위비티 크롤링 데이터 가져오기
+# 크롤링 데이터 가져오기
+detizen_data = crawling_de.crawling_detizen(50)
+think_data = crawling_think.Crawling_think()
 wevity_data = crawling.Crawling_wevity(20)
-
-# 대티즌 크롤링 데이터 가져오기
-#detizen_data = crawling_de.crawling_detizen(50)
-
-# 씽굿 크롤링 데이터 가져오기
-#think_data = crawling_think.Crawling_think()
 
 # 데이터 저장
 def data_store(idx):
@@ -67,7 +63,6 @@ def data_store(idx):
 			"url" : detizen_data["url"][i]
 		}
 		res = es.index(index=idx, doc_type="_doc", id=i, body=input_data)
-#		print(res)
 
 def data_store2(idx):
 	for i in range(len(think_data['site'])):
@@ -81,7 +76,6 @@ def data_store2(idx):
 			'url': think_data['url'][i]
 		}
 		res = es.index(index=idx, doc_type="_doc", id=i+len(detizen_data['site']), body=input_data)
-#		print(res)
 
 def data_store3(idx):
 	for i in range(len(wevity_data['site'])):
@@ -111,10 +105,6 @@ def data_search_all(idx):
 	data = {"match_all": {}}
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
-#	print("전체 검색 결과")
-#	pprint.pprint(res)
-#	for hit in res["hits"]["hits"]:
-#		print(hit["_source"])
 	
 	return res
 
@@ -123,8 +113,6 @@ def data_search(case, idx, input_str):
 	data = {"match": {case: input_str}}
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
-#	print("검색 결과")
-#	pprint.pprint(res)
 
 	tmp = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
@@ -148,8 +136,6 @@ def data_search(case, idx, input_str):
 		output['Dday'].append(tmp['Dday'][i])
 		output['ddaying'].append(tmp['ddaying'][i])
 		output['url'].append(tmp['url'][i])
-	
-#	pprint.pprint(output)
 	
 	return output
 
@@ -188,8 +174,6 @@ def data_search_cs(case, idx, input_str):
 	data = {"match": {case: input_str}}
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
-#	print("검색결과")
-#	pprint.pprint(res)
 
 	tmp = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': [],
@@ -244,22 +228,22 @@ if __name__ == "__main__":
 	# "title" / "field" / "host" 검색 설정
 	case = "title"
 	
-#	es.indices.delete(index=idx, ignore=[400, 404])
+	es.indices.delete(index=idx, ignore=[400, 404])
 
 	# 대티즌 데이터 저장
-#	data_store(idx)
+	data_store(idx)
 
 	# 씽굿 데이터 저장
-#	data_store2(idx)
+	data_store2(idx)
 
 	# 위비티 데이터 저장
-#	data_store3(idx)
+	data_store3(idx)
 
 	# 데이터 전체 검색
-	print("전체 검색 결과")
+#	print("전체 검색 결과")
 #	data_search_all(idx)
 	# 검색 기능 테스트
-	print("검색 결과")
+#	print("검색 결과")
 #	data_search(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
 	# 코사인 유사도 적용 검색 기능 테스트
 	print("코사인 유사도 적용 검색 결과")
