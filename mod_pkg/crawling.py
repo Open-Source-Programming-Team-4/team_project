@@ -29,10 +29,11 @@ def Crawling_wevity( P_num ) :
     soup = BeautifulSoup(whole_source, 'html.parser')
     items = soup.select(".ms-list > .list > li")
     
-    count = 0
+    count = -1
     for item in items :
         count = count + 1
-        if count == 1 or count % 37 == 1 :
+        print(item)
+        if count == 0 or count % 39 == 0 :
             continue
         result["site"].append("wevity")
         if item.select(".tit > a > span") != [] :
