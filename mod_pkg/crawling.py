@@ -32,7 +32,7 @@ def Crawling_wevity( P_num ) :
     count = -1
     for item in items :
         count = count + 1
-        print(item)
+#	    print(item)
         if count == 0 or count % 39 == 0 :
             continue
         result["site"].append("wevity")

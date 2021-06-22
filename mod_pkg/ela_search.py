@@ -5,6 +5,9 @@ import pprint
 from operator import itemgetter
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
+import crawling as crawling
+import crawling_de as crawling_de
+import crawling_think as crawling_think
 
 '''
 *** elastic search module ***
@@ -37,13 +40,13 @@ data_set = {
 '''
 
 # 위비티 크롤링 데이터 가져오기
-wevity_data = crawling.Crawling_wevity(20)
+#wevity_data = crawling.Crawling_wevity(20)
 
 # 대티즌 크롤링 데이터 가져오기
-detizen_data = crawling_de.crawling_detizen(50)
+#detizen_data = crawling_de.crawling_detizen(50)
 
 # 씽굿 크롤링 데이터 가져오기
-think_data = crawling_think.Crawling_think()
+#think_data = crawling_think.Crawling_think()
 
 # 데이터 저장
 def data_store(idx):
@@ -140,7 +143,8 @@ def data_search(case, idx, input_str):
 		output['ddaying'].append(tmp['ddaying'][i])
 		output['url'].append(tmp['url'][i])
 	
-	pprint.pprint(output)
+#	pprint.pprint(output)
+	
 	return output
 
 # 통합 검색기능 - 테스트 필요
@@ -169,7 +173,7 @@ def data_search_allField(idx,search_word):
 		output['ddaying'].append(tmp['ddaying'][i])
 		output['url'].append(tmp['url'][i])
 		
-	pprint.pprint(output)
+#	pprint.pprint(output)
 	return output
 
 # Cosine Similarity
@@ -178,8 +182,8 @@ def data_search_cs(case, idx, input_str):
 	data = {"match": {case: input_str}}
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
-	print("검색결과")
-	pprint.pprint(res)
+#	print("검색결과")
+#	pprint.pprint(res)
 
 	tmp = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': [],
@@ -229,33 +233,28 @@ def data_search_cs(case, idx, input_str):
 
 ''' 데이터 저장 & 검색 테스트 '''
 if __name__ == "__main__":
-	import crawling as crawling
-	import crawling_de as crawling_de
-	import crawling_think as crawling_think
 	# index 설정
 	idx = "data_idx"
 	# "title" / "field" / "host" 검색 설정
 	case = "title"
+	
+#	es.indices.delete(index=idx, ignore=[400, 404])
 
 	# 대티즌 데이터 저장
-	data_store(idx)
+#	data_store(idx)
 
 	# 씽굿 데이터 저장
-	data_store2(idx)
+#	data_store2(idx)
 
 	# 위비티 데이터 저장
-	data_store3(idx)
+#	data_store3(idx)
 
 	# 데이터 전체 검색
 	print("전체 검색 결과")
-	data_search_all(idx)
+#	data_search_all(idx)
 	# 검색 기능 테스트
 	print("검색 결과")
-	data_search(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
+#	data_search(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
 	# 코사인 유사도 적용 검색 기능 테스트
 	print("코사인 유사도 적용 검색 결과")
-	data_search_cs(case, idx, "제 39회 서울특별시 건축상 작품모집 공고")
-else:
-	import mod_pkg.crawling as crawling
-	import mod_pkg.crawling_de as crawling_de
-	import mod_pkg.crawling_think as crawling_think
+	data_search_cs(case, idx, "대구")
