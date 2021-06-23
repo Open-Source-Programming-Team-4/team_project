@@ -146,32 +146,60 @@ def data_search(case, idx, input_str):
 
 # 통합 검색기능 - 테스트 필요
 def data_search_allField(idx,search_word): 
-	res = {'site': [], 'title': [], 'field': [], 'host': [], 'Dday': [], 'ddaying': [], 'url': []}
+	res = es.search(index = idx,size=10000, body={"query": {"multi_match": {"query": search_word}}})
+	max_res = 5
+	if max_res < res['hits']['total']['value']:
+		max_res = 5
+	if max_res > res['hits']['total']['value']:
+		max_res = res['hits']['total']['value']
+	tmp = {'site': [], 'title': [], 'field': [],
+		'host': [], 'Dday': [], 'ddaying': [], 'url': [],
+		'score': []}
+	output = {'site': [], 'title': [], 'field': [],
+		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
+	if res['hits']['total']['value']>0:
+		for hit in res['hits']['hits']:
+			tmp['site'].append(hit['_source']['site'])
+			tmp['title'].append(hit['_source']['title'])
+			tmp['field'].append(hit['_source']['field'])
+			tmp['host'].append(hit['_source']['host'])
+			tmp['Dday'].append(hit['_source']['Dday'])
+			tmp['ddaying'].append(hit['_source']['ddaying'])
+			tmp['url'].append(hit['_source']['url'])
+			tmp['score'].append(cal_CoSim(search_word, hit['_source']['title']))
+			tmp['score'].append(cal_CoSim(search_word, hit['_source']['field']))
+			tmp['score'].append(cal_CoSim(search_word, hit['_source']['host']))
 
-	resp = es.search(index = idx,size=10000, body={"query": {"multi_match": {"query": search_word}}})
+		tmp_list = []
+		for i in range(len(tmp['site'])):
+			tmp_list.append({'site': tmp['site'][i], 'title': tmp['title'][i],
+					'field': tmp['field'][i], 'host': tmp['host'][i],
+					'Dday': tmp['Dday'][i], 'ddaying': tmp['ddaying'][i],
+					'url': tmp['url'][i], 'score': tmp['score'][i]})
+		tmp_list = sorted(tmp_list, key=itemgetter('score'), reverse=True)
+
+		for i in range(len(tmp['site'])):
+			tmp['site'][i] = tmp_list[i]['site']
+			tmp['title'][i] = tmp_list[i]['title']
+			tmp['field'][i] = tmp_list[i]['field']
+			tmp['host'][i] = tmp_list[i]['host']
+			tmp['Dday'][i] = tmp_list[i]['Dday']
+			tmp['ddaying'][i] = tmp_list[i]['ddaying']
+			tmp['url'][i] = tmp_list[i]['url']
+			tmp['score'][i] = tmp_list[i]['score']
 	
-	for doc in resp['hits']['hits']:
-		res['site'].append(doc['_source']['site'])	
-		res['title'].append(doc['_source']['title'])
-		res['field'].append(doc['_source']['field'])
-		res['host'].append(doc['_source']['host'])
-		res['Dday'].append(doc['_source']['Dday'])
-		res['ddaying'].append(doc['_source']['ddaying'])
-		res['url'].append(doc['_source']['url'])
-	
-	# 최대 5개 결과까지 출력
-	output = {'site': [], 'title': [], 'field': [], 'host': [], 'Dday': [], 'ddaying': [], 'url': []}
-	for i in range(5):
-		output['site'].append(tmp['site'][i])
-		output['title'].append(tmp['title'][i])
-		output['field'].append(tmp['field'][i])
-		output['host'].append(tmp['host'][i])
-		output['Dday'].append(tmp['Dday'][i])
-		output['ddaying'].append(tmp['ddaying'][i])
-		output['url'].append(tmp['url'][i])
-		
-#	pprint.pprint(output)
+		for i in range(max_res):
+			output['site'].append(tmp['site'][i])
+			output['title'].append(tmp['title'][i])
+			output['field'].append(tmp['field'][i])
+			output['host'].append(tmp['host'][i])
+			output['Dday'].append(tmp['Dday'][i])
+			output['ddaying'].append(tmp['ddaying'][i])
+			output['url'].append(tmp['url'][i])
+
+	pprint.pprint(output)
 	return output
+	
 
 # Cosine Similarity
 # 검색 기능 - case 변수에 "title" / "field" / "host" 지정
