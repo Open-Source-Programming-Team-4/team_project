@@ -40,7 +40,7 @@ Free Software
    >  실행이 되지 않는 경우 flask run 명령어를 이용하거나 ./app.py를 입력하여 주십시오.
 #### 9.  인터넷 브라우저 창을 키고 주소창에 http://127.0.0.1:5000/을 입력해 접속한다.
 
-####ElasticSearch가 자동으로 실행되지 않는 경우
+#### ElasticSearch가 자동으로 실행되지 않는 경우
 
 #### 1.  생성된 team_project 파일의 mod_pkg 파일로 이동한다.
    >  ~/new$ cd team_project/mod_pkg/
