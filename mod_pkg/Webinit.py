@@ -10,6 +10,11 @@ def search(searchobject, case):
     dt = data_search_cs(case, idx, searchobject)
   
   return render_template("main.html",rest=dt)
+def searchall():
+    idx = "data_idx"
+    dt = data_search_all(idx)
+    print(dt)
+    return dt
 if __name__=='__main__':
     keyword = input()
     res =  search(keyword)
