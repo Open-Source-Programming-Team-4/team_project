@@ -7,7 +7,7 @@ echo "============================="
 
 sudo apt-get install python3 python3-pip default-jdk
 
-pip3 install --upgrage pip
+pip3 install --upgrade pip
 pip3 install flask
 
 wget "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.13.2-linux-x86_64.tar.gz"
