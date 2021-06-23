@@ -34,21 +34,20 @@ Free Software
 깃허브 사용법
 =============
 
-#### 1.	Beautifulsoup 4.6.0, Elasticsearch, flask를 설치한다. 
-#### 2.	터미널 창에서 새로운 디렉토리를 생성한다.
+#### 1. 터미널 창에서 새로운 디렉토리를 생성한다.
    >	~$ mkdir new  ( new : 생성할 디렉토리 이름)
-#### 3.	생성한 디렉토리로 이동한다
+#### 2.	생성한 디렉토리로 이동한다
    >	~$ cd new   (new : 생성한 디렉토리 이름)
-#### 4.	git clone을 이용하여 복사본을 만든다.
+#### 3.	git clone을 이용하여 복사본을 만든다.
    >	~/new$ git clone https://github.com/Open-Source-Programming-Team-4/team_project.git
-#### 5. team_project 디렉토리로 이동한다.
+#### 4. team_project 디렉토리로 이동한다.
    >  ~$ cd team_project
-#### 6. install.sh 파일의 권한을 변경한다.
+#### 5. install.sh 파일의 권한을 변경한다.
    >  ~$ chmod 755 install.sh
 #### 6. ./install.sh 파일을 실행한다. (BeautifulSoup 4.6.0을 제외한 필요한 패키지 자동 설치)
    >  ~$ ./install.sh
    >  설치가 정상적으로 이루어지지 않는 경우 Elasticsearch와 flask를 수동 설치한다.
-#### 7. BeautifulSoup 4.6.0을 설치한다.
+#### 7. BeautifulSoup 4.6.0을 설치한다. (반드시 4.6.0 버전으로)
 #### 8. ./run_comp.sh파일을 실행한다.
    >  ~$ ./run_comp.sh
    >  권한은 자동으로 변경되어 있습니다.
