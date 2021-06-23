@@ -107,8 +107,19 @@ def data_search_all(idx):
 	res = es.search(index=idx, body=query, size=10000)
         
 	max_res = 5
+	tmp = {'site': [], 'title': [], 'field': [],
+		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
 	output = {'site': [], 'title': [], 'field': [],
 		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
+	for hit in res['hits']['hits']:
+		tmp['site'].append(hit['_source']['site'])
+		tmp['title'].append(hit['_source']['title'])
+		tmp['field'].append(hit['_source']['field'])
+		tmp['host'].append(hit['_source']['host'])
+		tmp['Dday'].append(hit['_source']['Dday'])
+		tmp['ddaying'].append(hit['_source']['ddaying'])
+		tmp['url'].append(hit['_source']['url'])
+	
 	for i in range(max_res):
 		output['site'].append(tmp['site'][i])
 		output['title'].append(tmp['title'][i])
@@ -117,7 +128,7 @@ def data_search_all(idx):
 		output['Dday'].append(tmp['Dday'][i])
 		output['ddaying'].append(tmp['ddaying'][i])
 		output['url'].append(tmp['url'][i])
-
+	
 	pprint.pprint(output)
 	return output
 
@@ -300,10 +311,10 @@ if __name__ == "__main__":
 
 	# 데이터 전체 검색
 #	print("전체 검색 결과")
-#	data_search_all(idx)
+	data_search_all(idx)
 	# 검색 기능 테스트
 #	print("검색 결과")
-	data_search(case, idx, "대구")
+#	data_search(case, idx, "대구")
 	# 코사인 유사도 적용 검색 기능 테스트
-	print("코사인 유사도 적용 검색 결과")
-	data_search_cs(case, idx, "사자")
+#	print("코사인 유사도 적용 검색 결과")
+#	data_search_cs(case, idx, "사자")
