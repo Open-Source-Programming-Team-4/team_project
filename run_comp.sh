@@ -23,4 +23,10 @@ echo ''
 echo '***********************************************************'
 echo '실행이 완료되면 Starting the service with ip_addr=127.0.0.1이 표시됩니다.'
 
-
+while true; do
+    current_time=`date +%H%M%S`
+    if [["${current_time}" == '000000']]; then
+        exec $directory/mod_pkg/ela_search.py & initpid=$!
+    fi
+    sleep 1
+done
