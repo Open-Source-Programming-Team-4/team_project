@@ -106,19 +106,19 @@ def data_search_all(idx):
 	query = {"query": data}
 	res = es.search(index=idx, body=query, size=10000)
         
-        max_res = 5
-        output = {'site': [], 'title': [], 'field': [],
-                'host': [], 'Dday': [], 'ddaying': [], 'url': []}
-        for i in range(max_res):
-            output['site'].append(tmp['site'][i])
-            output['title'].append(tmp['title'][i])
-            output['field'].append(tmp['field'][i])
-            output['host'].append(tmp['host'][i])
-            output['Dday'].append(tmp['Dday'][i])
-            output['ddaying'].append(tmp['ddaying'][i])
-            output['url'].append(tmp['url'][i])
+    max_res = 5
+    output = {'site': [], 'title': [], 'field': [],
+		'host': [], 'Dday': [], 'ddaying': [], 'url': []}
+	for i in range(max_res):
+		output['site'].append(tmp['site'][i])
+		output['title'].append(tmp['title'][i])
+		output['field'].append(tmp['field'][i])
+		output['host'].append(tmp['host'][i])
+		output['Dday'].append(tmp['Dday'][i])
+		output['ddaying'].append(tmp['ddaying'][i])
+		output['url'].append(tmp['url'][i])
         
-        pprint.pprint(output)
+	pprint.pprint(output)
 	return output
 
 # 검색 기능 - case 변수에 "title" / "field" / "host" 지정
