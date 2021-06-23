@@ -4,8 +4,10 @@ from flask import render_template
 
 def search(searchobject, case):
   idx = "data_idx"
-        # "title" / "field" / "host" 검색 설정
-  dt = data_search_cs(case, idx, searchobject)
+  if case=="all":
+    dt=  data_search_allField(idx,searchobject)
+  else:        # "title" / "field" / "host" 검색 설정
+    dt = data_search_cs(case, idx, searchobject)
   
   return render_template("main.html",rest=dt)
 if __name__=='__main__':
