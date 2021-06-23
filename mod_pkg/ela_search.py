@@ -258,6 +258,15 @@ def data_search_cs(case, idx, input_str):
 	pprint.pprint(output)
 	return output
 
+# 데이터 저장 함수
+def ela_store():
+    idx = "data_idx"
+    es.indices.delete(index=idx, ignore[400, 404])
+
+    data_store(idx)
+    data_store2(idx)
+    data_store3(idx)
+
 ''' 데이터 저장 & 검색 테스트 '''
 if __name__ == "__main__":
 	# index 설정
