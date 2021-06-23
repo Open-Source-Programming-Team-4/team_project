@@ -261,7 +261,7 @@ def data_search_cs(case, idx, input_str):
 # 데이터 저장 함수
 def ela_store():
     idx = "data_idx"
-    es.indices.delete(index=idx, ignore[400, 404])
+    es.indices.delete(index=idx, ignore=[400, 404])
 
     data_store(idx)
     data_store2(idx)
