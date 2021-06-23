@@ -2,7 +2,8 @@
 
 
 ### 구성도
-![OSP구성도](https://user-images.githubusercontent.com/79684170/119575711-6b029a00-bdf2-11eb-8212-6e1f12d5cf56.png)
+
+![OSP구성도](https://user-images.githubusercontent.com/70523625/123081296-c8712180-d458-11eb-9860-bb1e7e8af6b3.png)
 
 
 ### 기능
